@@ -1,0 +1,84 @@
+image: Visual Studio 2017
+branches:
+  only:
+    - master
+    # We'll also build whenever there is a new commit on any branch starting with `features/`
+    - /features\/.+/
+build_script:
+  - ps: .\build.ps1 -pack
+assembly_info:
+  # We'll version the binaries and the NuGet package in the build script
+  patch: false
+# We'll run the tests in the build script
+test: off
+# AppVeyor will create a release tag if a matching one does not exist
+# hence triggering another build
+skip_tags: true
+skip_commits:
+  files:
+    - .editorconfig
+    - LICENSE
+    - README.md
+deploy:
+  # The provider is case sensitive
+  - provider: GitHub
+    # By convention release versions start with `v`
+    release: v$(APPVEYOR_BUILD_VERSION)
+    auth_token:
+      # Encrypted `GitHub` `PAT`
+      # https://www.appveyor.com/docs/deployment/github/#provider-settings
+      secure: u4L0rRLkXwIaXfdye2A6444ey6RaBvnkvBmzBtv/CXnmTGQAnQ5vNAXYPQOu/Dxf
+    artifact: packages
+    draft: false
+    prerelease: false
+    on:
+      branch: master
+  - provider: GitHub
+    # By convention release versions start with `v`
+    release: v$(APPVEYOR_BUILD_VERSION)
+    auth_token:
+      # Encrypted `GitHub` `PAT`
+      # https://www.appveyor.com/docs/deployment/github/#provider-settings
+      secure: u4L0rRLkXwIaXfdye2A6444ey6RaBvnkvBmzBtv/CXnmTGQAnQ5vNAXYPQOu/Dxf
+    artifact: packages
+    draft: false
+    prerelease: true
+    on:
+      branch: /features\/.+/
+  - provider: NuGet
+    server: https://www.nuget.org/api/v2/package
+    api_key:
+      # Encrypted `NuGet.org` token - https://www.nuget.org/account/ApiKeys
+      # https://www.appveyor.com/docs/deployment/nuget/#provider-settings
+      secure: J8SujSqy8DyxXnhZ/rnX0zISbDAnQ1q3kcllQr/eBe6v4eCOTdxAll5C/KTkbT0B
+    skip_symbols: false
+    symbol_server: https://nuget.smbsrc.net/
+    artifact: packages
+    on:
+      branch: master
+  - provider: NuGet
+    server: https://www.myget.org/F/gabrielweyer-pre-release/api/v2/package
+    api_key:
+      # Encrypted `MyGet` token - https://www.myget.org/profile/Me#!/AccessTokens
+      # https://www.appveyor.com/docs/deployment/nuget/#provider-settings
+      secure: nQTKYFXZvqbHUiOj4GsFRTvQU+v9euzOgLV5CNy6mQCaIee/o8jIfcZDDTs0nxY3
+    skip_symbols: false
+    symbol_server: https://www.myget.org/F/gabrielweyer-pre-release/symbols/api/v2/package
+    artifact: packages
+    on:
+      branch: /features\/.+/
+# Environment variables
+environment:
+  # No need to pre-warm the `NuGet` cache
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+# `install` will run before `build_script`
+install:
+  # `dotnet-install.ps1` is available at: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script
+  # `Cake.dll` is targeting `.NET Core` `1.0.3`, so we need to install the latest `1.0.x` runtime
+  # The runtime is required to run a `.NET Core` application, it's part of the `SDK`
+  # https://github.com/dotnet/core/blob/master/release-notes/download-archive.md
+  - ps: .\build\dotnet-install.ps1 -SharedRuntime -Version 1.0.8
+  # `SimpleRouting` is targeting `.NET Core` `2.0`, so we can safely install the latest `SDK`
+  # The `SDK` is required to restore, build, publish... a `.NET Core` application
+  # https://www.microsoft.com/net/download/windows
+  - ps: .\build\dotnet-install.ps1 -Channel Current
