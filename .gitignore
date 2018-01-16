@@ -1,0 +1,17 @@
+# Rider
+
+.idea/
+
+# Compilation detritus
+
+obj/
+bin/
+
+# Cake
+
+tools/*
+!tools/packages.config
+
+# Build
+
+artifacts/

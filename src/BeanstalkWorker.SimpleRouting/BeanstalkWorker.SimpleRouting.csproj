@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>BeanstalkWorker.SimpleRouting</AssemblyName>
+    <RootNamespace>BeanstalkWorker.SimpleRouting</RootNamespace>
+    <PackageId>BeanstalkWorker.SimpleRouting</PackageId>
+    <Authors>Gabriel Weyer</Authors>
+    <Description>Allows to route a SQS message to a specific endpoint on the Worker instead of having a single endpoint handling all the messages.</Description>
+    <PackageTags>AWS;Elastic Beanstalk;Worker;SQS; Routing</PackageTags>
+    <RepositoryUrl>https://github.com/gabrielweyer/simple-routing</RepositoryUrl>
+    <copyright>Copyright © Beanstalk Worker Simple Routing contributors</copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.0.0" />
+  </ItemGroup>
+</Project>
