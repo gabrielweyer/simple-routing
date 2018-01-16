@@ -19,5 +19,9 @@ indent_size = 4
 indent_style = space
 indent_size = 4
 
+[*.json]
+indent_style = space
+indent_size = 2
+
 [tools/packages.config]
 end_of_line = LF

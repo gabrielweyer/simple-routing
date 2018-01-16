@@ -1,5 +1,5 @@
 branches:
-  feature:
+  feature[/-]:
     mode: ContinuousDeployment
 ignore:
   sha: []
