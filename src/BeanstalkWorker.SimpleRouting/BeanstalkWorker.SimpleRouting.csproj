@@ -7,6 +7,7 @@
     <Authors>Gabriel Weyer</Authors>
     <Description>Allows to route a SQS message to a specific endpoint on the Worker instead of having a single endpoint handling all the messages.</Description>
     <PackageTags>AWS;Elastic Beanstalk;Worker;SQS; Routing</PackageTags>
+    <PackageProjectUrl>https://github.com/gabrielweyer/simple-routing</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gabrielweyer/simple-routing</RepositoryUrl>
     <copyright>Copyright © Beanstalk Worker Simple Routing contributors</copyright>
   </PropertyGroup>
