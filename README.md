@@ -9,9 +9,14 @@ Relies on the [SQS message attributes][sqs-message-attributes]. This is distribu
 ### Web Tier - Set the attribute on the message
 
 ```csharp
+// Instantiate your model
+StronglyTypedMessage model = new StronglyTypedMessage();
+
 var sendMessageRequest = new SendMessageRequest
 {
-    // Set required properties such as `MessageBody` and `QueueUrl`
+  // Serialize your model as JSON
+  MessageBody = JsonConvert.SerializeObject(model)
+  // Set the `QueueUrl`
 };
 
 // AddRoutingAttribute is an extension method
@@ -34,9 +39,36 @@ Create a `iAM` user (if you don't have one already) which has access to `SQS`. T
 
 A sample worker app is provided in [src/SampleWorker](src/SampleWorker).
 
+If you wish to run the Worker without deploying to AWS Beanstalk you can leverage my [Beanstalk Seeder][beanstalk-seeder] project.
+
 #### Add the middleware to the router
 
+In the `Configure` method of your `Startup` class:
+
+```csharp
+public void Configure(IApplicationBuilder app)
+{
+    app.UseHeaderRouting();
+
+    // Abbreviated for clarity
+}
+```
+
 #### Use a matching route on a Controller Action
+
+```csharp
+// This is important
+[Route("")]
+public class SomeController : Controller
+{
+  // The route has to match the argument given to `AddRoutingAttribute`
+  [HttpPost("task-name")]
+  public async Task<IActionResult> SomeMethod(StronglyTypedMessage model)
+  {
+      // Abbreviated for clarity
+  }
+}
+```
 
 ## Limitations
 
@@ -50,3 +82,4 @@ A sample worker app is provided in [src/SampleWorker](src/SampleWorker).
 [no-worker-tier]: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html#concepts.platforms.net
 [no-environment-variables]: https://stackoverflow.com/questions/40127703/aws-elastic-beanstalk-environment-variables-in-asp-net-core-1-0
 [available-regions]: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
+[beanstalk-seeder]: https://github.com/gabrielweyer/beanstalk-seeder
