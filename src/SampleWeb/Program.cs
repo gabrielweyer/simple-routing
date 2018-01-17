@@ -1,4 +1,5 @@
 ﻿using System;
+using Amazon.SQS.Model;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,7 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        private static IWebHost BuildWebHost(string[] args)
         {
             var webHostBuilder = WebHost.CreateDefaultBuilder(args);
 
@@ -32,8 +33,9 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             var serilogLevel = configuration.GetLoggingLevel("MinimumLevel:Default");
 
             var loggerConfiguration = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .Enrich.WithDemystifiedStackTraces();
+                .Destructure.ByTransforming<MessageAttributeValue>(a => new {a.DataType, a.StringValue})
+                .Enrich.WithDemystifiedStackTraces()
+                .ReadFrom.Configuration(configuration);
 
             if (isDevelopment)
             {
@@ -59,10 +61,11 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             }
         }
     }
-    
+
     internal static class ConfigurationRootExtensions
     {
-        internal static LogEventLevel GetLoggingLevel(this IConfigurationRoot configuration, string keyName, LogEventLevel defaultLevel = LogEventLevel.Warning)
+        internal static LogEventLevel GetLoggingLevel(this IConfigurationRoot configuration, string keyName,
+            LogEventLevel defaultLevel = LogEventLevel.Warning)
         {
             try
             {

@@ -36,7 +36,9 @@ namespace BeanstalkWorker.SimpleRouting.Core.Logic
         {
             var request = GenerateRequest();
 
-            _logger.LogDebug("Sending message {MessageBody} with attributes {MessageAttributes} to queue {QueueUrl}",
+            _logger.LogDebug(
+                "Sending message {MessageType} with content {MessageBody} with attributes {@MessageAttributes} to queue {QueueUrl}",
+                body,
                 request.MessageBody,
                 request.MessageAttributes,
                 request.QueueUrl);
@@ -50,7 +52,7 @@ namespace BeanstalkWorker.SimpleRouting.Core.Logic
                     MessageBody = JsonConvert.SerializeObject(body),
                     QueueUrl = _queueOptions.WorkerQueueUrl.ToString()
                 };
-                
+
                 sendMessageRequest.MessageAttributes.AddRoutingAttribute(task);
 
                 return sendMessageRequest;
