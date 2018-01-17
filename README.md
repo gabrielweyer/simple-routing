@@ -6,11 +6,37 @@ Relies on the [SQS message attributes][sqs-message-attributes]. This is distribu
 
 ## How it works
 
-### Set the attribute on the message
+### Web Tier - Set the attribute on the message
 
-### Add the middleware to the router
+```csharp
+var sendMessageRequest = new SendMessageRequest
+{
+    // Set required properties such as `MessageBody` and `QueueUrl`
+};
 
-### Use a matching route on a Controller Action
+// AddRoutingAttribute is an extension method
+sendMessageRequest.MessageAttributes.AddRoutingAttribute("task-name");
+```
+
+A sample web app is provided in [src/SampleWeb](src/SampleWeb).
+
+You'll need to configure those two settings, either in `appsettings.json` or via environment variables:
+
+- `Aws:RegionSystemName` - [region code][available-regions], for example `ap-southeast-2`
+- `Aws:Queue:WorkerQueueUrl` - `URL` of the `SQS` queue, for example `https://sqs.ap-southeast-2.amazonaws.com/375985941080/dev-gabriel`
+
+Create a `iAM` user (if you don't have one already) which has access to `SQS`. Then create two environment variables:
+
+- `AWS_ACCESS_KEY_ID` - this is the `Access key ID`
+- `AWS_SECRET_ACCESS_KEY` - this is the `Secret access key`
+
+### Worker Tier
+
+A sample worker app is provided in [src/SampleWorker](src/SampleWorker).
+
+#### Add the middleware to the router
+
+#### Use a matching route on a Controller Action
 
 ## Limitations
 
@@ -23,3 +49,4 @@ Relies on the [SQS message attributes][sqs-message-attributes]. This is distribu
 [periodic-tasks]: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features-managing-env-tiers.html#worker-periodictasks
 [no-worker-tier]: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html#concepts.platforms.net
 [no-environment-variables]: https://stackoverflow.com/questions/40127703/aws-elastic-beanstalk-environment-variables-in-asp-net-core-1-0
+[available-regions]: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions

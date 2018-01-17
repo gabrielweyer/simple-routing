@@ -1,30 +1,59 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Amazon;
+using Amazon.SQS;
+using BeanstalkWorker.SimpleRouting.Core.Logic;
+using BeanstalkWorker.SimpleRouting.Core.Options;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeanstalkWorker.SimpleRouting.SampleWeb
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            AddServices(services);
+
+            ConfigureOptions(services);
+
+            services.AddOptions();
+            services.AddMvc();
+        }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseMvc(routes =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new {controller = "Send", action = "Nothing"});
             });
+        }
+
+        private void ConfigureOptions(IServiceCollection services)
+        {
+            services.Configure<QueueOptions>(_configuration.GetSection("Aws:Queue"));
+        }
+
+        private void AddServices(IServiceCollection services)
+        {
+            services.AddSingleton<IAmazonSQS>(sp =>
+            {
+                var systemName = _configuration.GetValue<string>("Aws:RegionSystemName");
+                var regionEndpoint = RegionEndpoint.GetBySystemName(systemName);
+
+                return new AmazonSQSClient(regionEndpoint);
+            });
+            services.AddScoped<ISqsClient, SqsClient>();
         }
     }
 }
