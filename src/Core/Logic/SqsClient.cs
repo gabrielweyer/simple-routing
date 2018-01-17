@@ -38,7 +38,7 @@ namespace BeanstalkWorker.SimpleRouting.Core.Logic
 
             _logger.LogDebug(
                 "Sending message {MessageType} with content {MessageBody} with attributes {@MessageAttributes} to queue {QueueUrl}",
-                body,
+                typeof(T).Name,
                 request.MessageBody,
                 request.MessageAttributes,
                 request.QueueUrl);
