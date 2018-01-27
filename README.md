@@ -1,5 +1,13 @@
 # Elastic Beanstalk Worker Simple Routing
 
+| Package | Release | Pre-release |
+| --- | --- | --- |
+| `BeanstalkWorker.SimpleRouting` | [![NuGet][nuget-badge]][nuget] | [![MyGet][myget-badge]][myget] |
+
+| CI | Status | Platform(s) | Framework(s) | Test Framework(s) |
+| --- | --- | --- | --- | --- |
+| [AppVeyor][app-veyor] | [![Build Status][app-veyor-shield]][app-veyor] | `Windows` | `nestandard2.0` | `netcoreapp2.0.4` |
+
 Allows to route a `SQS` message to a specific endpoint on the `Worker` instead of having a single endpoint handling all the messages.
 
 Relies on the [SQS message attributes][sqs-message-attributes]. This is distributed via a `NuGet` package but the implementation is so simple that you can just copy the classes into your own solution if that works better for you.
@@ -83,3 +91,9 @@ public class SomeController : Controller
 [no-environment-variables]: https://stackoverflow.com/questions/40127703/aws-elastic-beanstalk-environment-variables-in-asp-net-core-1-0
 [available-regions]: http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions
 [beanstalk-seeder]: https://github.com/gabrielweyer/beanstalk-seeder
+[nuget-badge]: https://img.shields.io/nuget/v/BeanstalkWorker.SimpleRouting.svg?label=NuGet
+[nuget]: https://www.nuget.org/packages/BeanstalkWorker.SimpleRouting/
+[myget-badge]: https://img.shields.io/myget/gabrielweyer-pre-release/v/BeanstalkWorker.SimpleRouting.svg?label=MyGet
+[myget]: https://www.myget.org/feed/gabrielweyer-pre-release/package/nuget/BeanstalkWorker.SimpleRouting
+[app-veyor]: https://ci.appveyor.com/project/GabrielWeyer/simple-routing
+[app-veyor-shield]: https://ci.appveyor.com/api/projects/status/github/gabrielweyer/simple-routing?branch=master&svg=true
