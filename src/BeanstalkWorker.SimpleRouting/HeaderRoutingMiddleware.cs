@@ -43,6 +43,8 @@ namespace BeanstalkWorker.SimpleRouting
                 return Task.CompletedTask;
             }
 
+            logger.LogDebug("Routing the request to {SimpleRoutingPath}", task);
+
             context.Request.Path = $"/{task.Single()}";
 
             return _next(context);
