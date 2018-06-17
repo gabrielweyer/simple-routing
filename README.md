@@ -31,6 +31,8 @@ var sendMessageRequest = new SendMessageRequest
 sendMessageRequest.MessageAttributes.AddRoutingAttribute("task-name");
 ```
 
+#### Sample project
+
 A sample `Web` app is provided in [src/SampleWeb](src/SampleWeb).
 
 You'll need to configure those two settings, either in `appsettings.json` or via environment variables:
@@ -42,6 +44,11 @@ Create a `iAM` user (if you don't have one already) which has access to `SQS`. T
 
 - `AWS_ACCESS_KEY_ID` - this is the `Access key ID`
 - `AWS_SECRET_ACCESS_KEY` - this is the `Secret access key`
+
+You can then send two distinct types of messages by hiting two different endpoints:
+
+- `GET /send/work`
+- `GET /send/nothing`
 
 ### Worker Tier
 
