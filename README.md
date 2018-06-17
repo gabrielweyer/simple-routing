@@ -33,7 +33,7 @@ sendMessageRequest.MessageAttributes.AddRoutingAttribute("task-name");
 
 #### Sample project
 
-A sample `Web` app is provided in [src/SampleWeb](src/SampleWeb).
+A sample `Web` app is provided in [samples/SampleWeb](samples/SampleWeb).
 
 You'll need to configure those two settings, either in `appsettings.json` or via environment variables:
 
@@ -52,7 +52,7 @@ You can then send two distinct types of messages by hiting two different endpoin
 
 ### Worker Tier
 
-A sample `Worker` app is provided in [src/SampleWorker](src/SampleWorker).
+A sample `Worker` app is provided in [samples/SampleWorker](samples/SampleWorker).
 
 If you wish to run the `Worker` without deploying to `AWS Beanstalk` you can leverage my [Beanstalk Seeder][beanstalk-seeder] project.
 
