@@ -1,1 +1,2 @@
 tools/packages.config eol=lf
+*.ps1 linguist-vendored
