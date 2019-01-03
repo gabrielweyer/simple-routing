@@ -27,7 +27,7 @@ namespace BeanstalkWorker.SimpleRouting.Core.Logic
             return SendMessagesAsync(WorkerConstants.DoWorkTaskName, body);
         }
 
-        public Task SendDoNothingMessageAync(DoNothingMessage body)
+        public Task SendDoNothingMessageAsync(DoNothingMessage body)
         {
             return SendMessagesAsync(WorkerConstants.DoNothingTaskName, body);
         }
@@ -63,6 +63,6 @@ namespace BeanstalkWorker.SimpleRouting.Core.Logic
     public interface ISqsClient
     {
         Task SendDoWorkMessageAsync(DoWorkMessage body);
-        Task SendDoNothingMessageAync(DoNothingMessage body);
+        Task SendDoNothingMessageAsync(DoNothingMessage body);
     }
 }
