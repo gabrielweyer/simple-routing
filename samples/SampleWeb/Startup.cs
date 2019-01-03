@@ -4,6 +4,7 @@ using BeanstalkWorker.SimpleRouting.Core.Logic;
 using BeanstalkWorker.SimpleRouting.Core.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +26,9 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             ConfigureOptions(services);
 
             services.AddOptions();
-            services.AddMvc();
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
