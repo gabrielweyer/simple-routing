@@ -4,6 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 
 namespace BeanstalkWorker.SimpleRouting.SampleWeb
@@ -54,6 +55,8 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             {
                 logger.Information("Starting Host...");
 
+                SetAwsEnvironmentVariables(configuration, logger);
+
                 return webHostBuilder
                     .UseStartup<Startup>()
                     .UseConfiguration(configuration)
@@ -64,6 +67,46 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             {
                 logger.Fatal(ex, "Host terminated unexpectedly");
                 throw;
+            }
+        }
+
+        private static void SetAwsEnvironmentVariables(IConfigurationRoot configuration, Logger logger)
+        {
+            const string awsAccessKeyIdVariableName = "AWS_ACCESS_KEY_ID";
+            const string awsSecretAccessKeyVariableName = "AWS_SECRET_ACCESS_KEY";
+
+            var accessKeyIdFromEnvironmentVariable = Environment.GetEnvironmentVariable(awsAccessKeyIdVariableName);
+            var secretAccessKeyFromEnvironmentVariable = Environment.GetEnvironmentVariable(awsSecretAccessKeyVariableName);
+
+            if (!string.IsNullOrWhiteSpace(accessKeyIdFromEnvironmentVariable) &&
+                !string.IsNullOrWhiteSpace(secretAccessKeyFromEnvironmentVariable))
+            {
+                logger.Information($"'{awsAccessKeyIdVariableName}' and '{awsSecretAccessKeyVariableName}' set via environment variables");
+
+                return;
+            }
+
+            var accessKeyIdFromConfiguration = configuration.GetValue<string>(awsAccessKeyIdVariableName);
+            var secretAccessKeyFromConfiguration = configuration.GetValue<string>(awsSecretAccessKeyVariableName);
+
+            if (!string.IsNullOrWhiteSpace(accessKeyIdFromConfiguration) &&
+                !string.IsNullOrWhiteSpace(secretAccessKeyFromConfiguration))
+            {
+                logger.Information($"'{awsAccessKeyIdVariableName}' and '{awsSecretAccessKeyVariableName}' present in configuration, setting matching environment variables");
+
+                Environment.SetEnvironmentVariable(
+                    awsAccessKeyIdVariableName,
+                    accessKeyIdFromConfiguration,
+                    EnvironmentVariableTarget.Process);
+
+                Environment.SetEnvironmentVariable(
+                    awsSecretAccessKeyVariableName,
+                    secretAccessKeyFromConfiguration,
+                    EnvironmentVariableTarget.Process);
+            }
+            else
+            {
+                throw new InvalidOperationException($"'{awsAccessKeyIdVariableName}' and '{awsSecretAccessKeyVariableName}' should either be set as environment variables or configuration, please refer to the README: https://github.com/gabrielweyer/simple-routing/blob/master/README.md#configuration.");
             }
         }
     }

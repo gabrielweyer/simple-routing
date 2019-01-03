@@ -35,20 +35,21 @@ sendMessageRequest.MessageAttributes.AddRoutingAttribute("task-name");
 
 A sample `Web` app is provided in [samples/SampleWeb](samples/SampleWeb).
 
-You'll need to configure those two settings, either in `appsettings.json`, [user secrets][secret-manager] or via [environment variables][environment-variables]:
-
-- `Aws:RegionSystemName` - [region code][available-regions], for example `ap-southeast-2`
-- `Aws:Queue:WorkerQueueUrl` - `URL` of the `SQS` queue, for example `https://sqs.ap-southeast-2.amazonaws.com/375985941080/dev-gabriel`
-
-Create a `iAM` user (if you don't have one already) which has access to `SQS`. Then create two **environment variables**:
-
-- `AWS_ACCESS_KEY_ID` - this is the `Access key ID`
-- `AWS_SECRET_ACCESS_KEY` - this is the `Secret access key`
-
-You can then send two distinct types of messages by hiting two different endpoints:
+You can send two distinct types of messages by hitting two different endpoints:
 
 - `GET /send/work`
 - `GET /send/nothing`
+
+##### Configuration
+
+Create a `iAM` user (if you don't have one already) which has access to `SQS`.
+
+You'll need to configure four settings, either using [user secrets][secret-manager] (preferred way as they'll be shared with the sample worker), `appsettings.json` or via [environment variables][environment-variables]:
+
+- `Aws:RegionSystemName` - [region code][available-regions], for example `ap-southeast-2`
+- `Aws:Queue:WorkerQueueUrl` - `URL` of the `SQS` queue, for example `https://sqs.ap-southeast-2.amazonaws.com/375985941080/dev-gabriel`
+- `AWS_ACCESS_KEY_ID` - this is the `Access key ID` of your `iAM user`
+- `AWS_SECRET_ACCESS_KEY` - this is the `Secret access key` of your `iAM user`
 
 ### Worker Tier
 
