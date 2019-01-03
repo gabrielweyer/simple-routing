@@ -33,7 +33,7 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
                 RestDuration = TimeSpan.FromDays(3)
             };
 
-            await _sqsClient.SendDoNothingMessageAync(body);
+            await _sqsClient.SendDoNothingMessageAsync(body);
         }
     }
 }
