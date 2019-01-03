@@ -24,11 +24,17 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
 
             var isDevelopment = EnvironmentName.Development.Equals(environment);
 
-            var configuration = new ConfigurationBuilder()
+            var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(contentRoot)
                 .AddJsonFile("appsettings.json", false, false)
-                .AddEnvironmentVariables()
-                .Build();
+                .AddEnvironmentVariables();
+
+            if (isDevelopment)
+            {
+                configurationBuilder.AddUserSecrets<Program>();
+            }
+
+            var configuration = configurationBuilder.Build();
 
             var serilogLevel = configuration.GetLoggingLevel("MinimumLevel:Default");
 

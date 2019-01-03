@@ -6,7 +6,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.8" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.44" />
     <PackageReference Include="BeanstalkWorker.SimpleRouting" Version="0.2.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />

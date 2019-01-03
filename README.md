@@ -31,16 +31,16 @@ var sendMessageRequest = new SendMessageRequest
 sendMessageRequest.MessageAttributes.AddRoutingAttribute("task-name");
 ```
 
-#### Sample project
+#### Web sample project
 
 A sample `Web` app is provided in [samples/SampleWeb](samples/SampleWeb).
 
-You'll need to configure those two settings, either in `appsettings.json` or via environment variables:
+You'll need to configure those two settings, either in `appsettings.json`, [user secrets][secret-manager] or via [environment variables][environment-variables]:
 
 - `Aws:RegionSystemName` - [region code][available-regions], for example `ap-southeast-2`
 - `Aws:Queue:WorkerQueueUrl` - `URL` of the `SQS` queue, for example `https://sqs.ap-southeast-2.amazonaws.com/375985941080/dev-gabriel`
 
-Create a `iAM` user (if you don't have one already) which has access to `SQS`. Then create two environment variables:
+Create a `iAM` user (if you don't have one already) which has access to `SQS`. Then create two **environment variables**:
 
 - `AWS_ACCESS_KEY_ID` - this is the `Access key ID`
 - `AWS_SECRET_ACCESS_KEY` - this is the `Secret access key`
@@ -51,10 +51,6 @@ You can then send two distinct types of messages by hiting two different endpoin
 - `GET /send/nothing`
 
 ### Worker Tier
-
-A sample `Worker` app is provided in [samples/SampleWorker](samples/SampleWorker).
-
-If you wish to run the `Worker` without deploying to `AWS Beanstalk` you can leverage my [Beanstalk Seeder][beanstalk-seeder] project.
 
 #### Add the middleware to the Worker
 
@@ -85,6 +81,12 @@ public class SomeController : Controller
 }
 ```
 
+#### Worker sample project
+
+A sample `Worker` app is provided in [samples/SampleWorker](samples/SampleWorker).
+
+If you wish to run the `Worker` without deploying to `AWS Beanstalk` you can leverage my [Beanstalk Seeder][beanstalk-seeder] project.
+
 ## Limitations
 
 - Does not support [periodic tasks][periodic-tasks]
@@ -104,3 +106,5 @@ public class SomeController : Controller
 [myget]: https://www.myget.org/feed/gabrielweyer-pre-release/package/nuget/BeanstalkWorker.SimpleRouting
 [app-veyor]: https://ci.appveyor.com/project/GabrielWeyer/simple-routing
 [app-veyor-shield]: https://ci.appveyor.com/api/projects/status/github/gabrielweyer/simple-routing?branch=master&svg=true
+[secret-manager]: https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.1&tabs=windows#secret-manager
+[environment-variables]: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#environment-variables-configuration-provider

@@ -15,18 +15,25 @@ namespace BeanstalkWorker.SimpleRouting.SampleWorker
         }
 
         private static IWebHost BuildWebHost(string[] args)
-        {var webHostBuilder = WebHost.CreateDefaultBuilder(args);
+        {
+            var webHostBuilder = WebHost.CreateDefaultBuilder(args);
 
             var contentRoot = webHostBuilder.GetSetting("contentRoot");
             var environment = webHostBuilder.GetSetting("ENVIRONMENT");
 
             var isDevelopment = EnvironmentName.Development.Equals(environment);
 
-            var configuration = new ConfigurationBuilder()
+            var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(contentRoot)
                 .AddJsonFile("appsettings.json", false, false)
-                .AddEnvironmentVariables()
-                .Build();
+                .AddEnvironmentVariables();
+
+            if (isDevelopment)
+            {
+                configurationBuilder.AddUserSecrets<Program>();
+            }
+
+            var configuration = configurationBuilder.Build();
 
             var serilogLevel = configuration.GetLoggingLevel("MinimumLevel:Default");
 
