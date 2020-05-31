@@ -1,4 +1,4 @@
-image: Visual Studio 2017
+image: Visual Studio 2019
 branches:
   only:
     - master
@@ -6,6 +6,7 @@ branches:
     - /features\/.+/
 build_script:
   - ps: |
+      dotnet tool restore
       dotnet cake build.cake --bootstrap
       dotnet cake build.cake --pack
 assembly_info:
@@ -52,9 +53,9 @@ deploy:
     api_key:
       # Encrypted `NuGet.org` token - https://www.nuget.org/account/ApiKeys
       # https://www.appveyor.com/docs/deployment/nuget/#provider-settings
-      secure: Sqd52uKYGsHmidz0HCm4Z/aspoRiulxr5U6PbQLL9QytEHQ0Iw2kqzETcvYewDYq
+      secure: C5GBFhLf/V0BSWI2vozKYgh9imNBcW/8LNBQzHvI/Qw5wPrpQGQNbHOeaorLFKQB
     skip_symbols: false
-    symbol_server: https://nuget.smbsrc.net/
+    symbol_server: https://www.nuget.org/api/v2/symbolpackage
     artifact: packages
     on:
       branch: master
@@ -78,5 +79,4 @@ install:
   # `SimpleRouting` is targeting `netstandard2.0`, so we can safely install the latest `SDK`
   # The `SDK` is required to restore, build, publish... a `.NET Core` application
   # https://www.microsoft.com/net/download/windows
-  - ps: .\build\dotnet-install.ps1 -Channel Current
-  - ps: dotnet tool install --global Cake.Tool --version 0.31.0
+  - ps: .\build\dotnet-install.ps1 -InstallDir 'C:\Program Files\dotnet\'

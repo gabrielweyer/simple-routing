@@ -10,12 +10,13 @@
     <PackageProjectUrl>https://github.com/gabrielweyer/simple-routing</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gabrielweyer/simple-routing</RepositoryUrl>
     <copyright>Copyright © Beanstalk Worker Simple Routing contributors</copyright>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.44" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.102.118" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Primitives" Version="3.1.4" />
   </ItemGroup>
 </Project>

@@ -1,10 +1,7 @@
 ﻿using Amazon;
 using Amazon.SQS;
-using BeanstalkWorker.SimpleRouting.Core.Logic;
 using BeanstalkWorker.SimpleRouting.Core.Options;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,21 +22,16 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
 
             ConfigureOptions(services);
 
-            services.AddOptions();
             services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddOptions()
+                .AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action}/{id?}",
-                    defaults: new {controller = "Send", action = "Nothing"});
-            });
+            app.UseRouting();
+
+            app.UseEndpoints(endpoint => endpoint.MapControllers());
         }
 
         private void ConfigureOptions(IServiceCollection services)
@@ -54,7 +46,10 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
                 var systemName = _configuration.GetValue<string>("Aws:RegionSystemName");
                 var regionEndpoint = RegionEndpoint.GetBySystemName(systemName);
 
-                return new AmazonSQSClient(regionEndpoint);
+                var accessKeyId = _configuration.GetValue<string>("Aws:Queue:AccessKeyId");
+                var secretAccessKey = _configuration.GetValue<string>("Aws:Queue:SecretAccessKey");
+
+                return new AmazonSQSClient(accessKeyId, secretAccessKey, regionEndpoint);
             });
             services.AddScoped<ISqsClient, SqsClient>();
         }

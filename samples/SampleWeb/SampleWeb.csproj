@@ -1,19 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>fa5b7428-c384-484b-bf75-1d9b2d1526a0</UserSecretsId>
     <AssemblyName>BeanstalkWorker.SimpleRouting.SampleWeb</AssemblyName>
     <RootNamespace>BeanstalkWorker.SimpleRouting.SampleWeb</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.44" />
-    <PackageReference Include="BeanstalkWorker.SimpleRouting" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" />
-    <PackageReference Include="Serilog" Version="2.7.1" />
-    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Serilog.Enrichers.Demystify" Version="0.1.0-dev-00016" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.3.102.118" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />

@@ -5,7 +5,8 @@ using Microsoft.Extensions.Logging;
 namespace BeanstalkWorker.SimpleRouting.SampleWorker
 {
     [Route("")]
-    public class WorkerController : Controller
+    [ApiController]
+    public class WorkerController : ControllerBase
     {
         private readonly ILogger<WorkerController> _logger;
 
@@ -17,7 +18,7 @@ namespace BeanstalkWorker.SimpleRouting.SampleWorker
         [HttpPost(WorkerConstants.DoNothingTaskName)]
         public IActionResult DoNothing(DoNothingMessage model)
         {
-            _logger.LogDebug("Received message {@Message}", model);
+            _logger.LogDebug("Received order to do nothing starting at {StartAt}", model.StartAt);
 
             return Ok();
         }
@@ -25,7 +26,7 @@ namespace BeanstalkWorker.SimpleRouting.SampleWorker
         [HttpPost(WorkerConstants.DoWorkTaskName)]
         public IActionResult DoWork(DoWorkMessage model)
         {
-            _logger.LogDebug("Received message {@Message}", model);
+            _logger.LogDebug("Received order to do {WorkType} starting at {StartAt}", model.NatureOfWork, model.StartsAt);
 
             return Ok();
         }
