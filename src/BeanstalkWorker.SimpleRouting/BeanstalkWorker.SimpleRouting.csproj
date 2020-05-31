@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/gabrielweyer/simple-routing</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gabrielweyer/simple-routing</RepositoryUrl>
     <copyright>Copyright © Beanstalk Worker Simple Routing contributors</copyright>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.SQS" Version="3.3.3.44" />
