@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BeanstalkWorker.SimpleRouting.Core.Logic;
 using BeanstalkWorker.SimpleRouting.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeanstalkWorker.SimpleRouting.SampleWeb
 {
-    public class SendController : Controller
+    [ApiController]
+    [Route("send")]
+    public class SendController : ControllerBase
     {
         private readonly ISqsClient _sqsClient;
 
@@ -15,22 +16,24 @@ namespace BeanstalkWorker.SimpleRouting.SampleWeb
             _sqsClient = sqsClient;
         }
 
+        [Route("work")]
         public async Task Work()
         {
             var body = new DoWorkMessage
             {
-                ExpectedDurationOfWork = TimeSpan.FromSeconds(3),
-                NatureOfWork = "Not much"
+                NatureOfWork = "Not much",
+                StartsAt = DateTimeOffset.UtcNow.AddYears(3)
             };
 
             await _sqsClient.SendDoWorkMessageAsync(body);
         }
 
+        [Route("nothing")]
         public async Task Nothing()
         {
             var body = new DoNothingMessage
             {
-                RestDuration = TimeSpan.FromDays(3)
+                StartAt = DateTimeOffset.UtcNow.AddSeconds(1)
             };
 
             await _sqsClient.SendDoNothingMessageAsync(body);

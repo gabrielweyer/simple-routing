@@ -5,9 +5,8 @@ using BeanstalkWorker.SimpleRouting.Core.Models;
 using BeanstalkWorker.SimpleRouting.Core.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
-namespace BeanstalkWorker.SimpleRouting.Core.Logic
+namespace BeanstalkWorker.SimpleRouting.SampleWeb
 {
     public class SqsClient : ISqsClient
     {
@@ -49,7 +48,7 @@ namespace BeanstalkWorker.SimpleRouting.Core.Logic
             {
                 var sendMessageRequest = new SendMessageRequest
                 {
-                    MessageBody = JsonConvert.SerializeObject(body),
+                    MessageBody = System.Text.Json.JsonSerializer.Serialize(body),
                     QueueUrl = _queueOptions.WorkerQueueUrl.ToString()
                 };
 

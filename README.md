@@ -6,7 +6,7 @@
 
 | CI | Status | Platform(s) | Framework(s) | Test Framework(s) |
 | --- | --- | --- | --- | --- |
-| [AppVeyor][app-veyor] | [![Build Status][app-veyor-shield]][app-veyor] | `Windows` | `nestandard2.0` | `netcoreapp2.2.0` |
+| [AppVeyor][app-veyor] | [![Build Status][app-veyor-shield]][app-veyor] | `Windows` | `nestandard2.0` | `netcoreapp3.1` |
 
 Allows to route a `SQS` message to a specific endpoint on the `Worker` instead of having a single endpoint handling all the messages.
 
@@ -22,12 +22,12 @@ StronglyTypedMessage model = new StronglyTypedMessage();
 
 var sendMessageRequest = new SendMessageRequest
 {
-  // Serialize your model as JSON
-  MessageBody = JsonConvert.SerializeObject(model)
-  // Set the QueueUrl
+  // Serialize your model as JSON (you can use Newtonsoft.Json if you prefer)
+  MessageBody = System.Text.Json.JsonSerializer.Serialize(model)
+  // Set the QueueUrl and other properties as you see fit
 };
 
-// AddRoutingAttribute is an extension method
+// AddRoutingAttribute is an extension method in the "BeanstalkWorker.SimpleRouting" namespace
 sendMessageRequest.MessageAttributes.AddRoutingAttribute("task-name");
 ```
 
@@ -37,19 +37,19 @@ A sample `Web` app is provided in [samples/SampleWeb](samples/SampleWeb).
 
 You can send two distinct types of messages by hitting two different endpoints:
 
-- `GET /send/work`
-- `GET /send/nothing`
+- `GET http://localhost:5000/send/work`
+- `GET http://localhost:5000/send/nothing`
 
 ##### Configuration
 
 Create a `iAM` user (if you don't have one already) which has access to `SQS`.
 
-You'll need to configure four settings, either using [user secrets][secret-manager] (preferred way as they'll be shared with the sample worker), `appsettings.json` or via [environment variables][environment-variables]:
+You'll need to configure four settings using [user secrets][secret-manager]:
 
 - `Aws:RegionSystemName` - [region code][available-regions], for example `ap-southeast-2`
 - `Aws:Queue:WorkerQueueUrl` - `URL` of the `SQS` queue, for example `https://sqs.ap-southeast-2.amazonaws.com/375985941080/dev-gabriel`
-- `AWS_ACCESS_KEY_ID` - this is the `Access key ID` of your `iAM user`
-- `AWS_SECRET_ACCESS_KEY` - this is the `Secret access key` of your `iAM user`
+- `Aws:Queue:AccessKeyId` - this is the `Access key ID` of your `iAM user`
+- `Aws:Queue:SecretAccessKey` - this is the `Secret access key` of your `iAM user`
 
 ### Worker Tier
 
@@ -60,9 +60,12 @@ In the `Configure` method of your `Startup` class:
 ```csharp
 public void Configure(IApplicationBuilder app)
 {
+    // The simple routing middleware needs to be added **before** configuring endpoint routing
     app.UseHeaderRouting();
 
-    // Abbreviated for clarity
+    app.UseRouting();
+
+    app.UseEndpoints(endpoint => endpoint.MapControllers());
 }
 ```
 
@@ -71,9 +74,10 @@ public void Configure(IApplicationBuilder app)
 ```csharp
 // This is important, we do not want a prefix in front of the action's route
 [Route("")]
-public class SomeController : Controller
+[ApiController]
+public class SomeController : ControllerBase
 {
-  // The route has to match the argument given to AddRoutingAttribute
+  // The route template has to match the argument given to AddRoutingAttribute
   [HttpPost("task-name")]
   public async Task<IActionResult> SomeMethod(StronglyTypedMessage model)
   {
@@ -108,4 +112,3 @@ If you wish to run the `Worker` without deploying to `AWS Beanstalk` you can lev
 [app-veyor]: https://ci.appveyor.com/project/GabrielWeyer/simple-routing
 [app-veyor-shield]: https://ci.appveyor.com/api/projects/status/github/gabrielweyer/simple-routing?branch=master&svg=true
 [secret-manager]: https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-2.1&tabs=windows#secret-manager
-[environment-variables]: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-2.1#environment-variables-configuration-provider
